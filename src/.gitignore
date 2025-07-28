@@ -1,0 +1,46 @@
+# macOS system files
+.DS_Store
+
+# Node.js dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript compiled output
+dist/
+build/
+
+# Environment variables
+.env
+.env.*.local
+
+# OS / Editor specific
+.idea/
+.vscode/
+*.swp
+
+# Jest test coverage
+coverage/
+
+# Optional npm cache directory
+.npm/
+
+# Local history for VS Code
+.history/
+
+# TypeORM migration logs
+typeorm*.log
+
+# Optional: ignore local database/test files
+*.sqlite
+*.db
+*.local
+
+# Optional: ignore compiled files from other tools
+*.js
+*.js.map
+*.tsbuildinfo
