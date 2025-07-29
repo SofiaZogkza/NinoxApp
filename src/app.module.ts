@@ -1,32 +1,37 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bullmq';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TaskEntity } from './tasks/task.entity';
-import { QueueService } from './queue/queue.service';
-import { WorkerService } from './worker/worker.service';
-import { CoordinatorService } from './coordinator/coordinator.service';
+import { QueueModule } from './queue/queue.module';
+import { InvoiceController } from './workflows/invoice/invoice.controller';
+import { InvoiceWorker } from './queue/worker/invoice.worker';
+import { InvoiceWorkflow } from './workflows/invoice/invoice.workflow';
+import { TaskEntity } from './tasks/tasks.entity';
+import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      database: 'workflow',
-      entities: [TaskEntity],
-      synchronize: true,
+    ConfigModule.forRoot({
+      load: [databaseConfig],
+      isGlobal: true, // Make config available across all modules
     }),
-    TypeOrmModule.forFeature([TaskEntity]),
-    BullModule.forRoot({
-      connection: {
-        host: 'localhost',
-        port: 6379,
-      },
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get('database.host'),
+        port: config.get('database.port'),
+        username: config.get('database.username'),
+        password: config.get('database.password'),
+        database: config.get('database.database'),
+        entities: [TaskEntity],
+        synchronize: true, // TODO: Remove in PROD
+      }),
+      inject: [ConfigService],
     }),
-    BullModule.registerQueue({ name: 'tasks' }),
+    TypeOrmModule.forFeature([TaskEntity]), // Make TaskEntity available for injection
+    QueueModule,
   ],
-  providers: [QueueService, WorkerService, CoordinatorService],
+  controllers: [InvoiceController],
+  providers: [InvoiceWorkflow, InvoiceWorker],
 })
 export class AppModule {}

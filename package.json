@@ -1,0 +1,45 @@
+{
+  "name": "ninoxapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/src/main.js",
+  "scripts": {
+    "start": "ts-node src/main.ts",
+    "start:dev": "nest start --watch",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SofiaZogkza/NinoxApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SofiaZogkza/NinoxApp/issues"
+  },
+  "homepage": "https://github.com/SofiaZogkza/NinoxApp#readme",
+  "dependencies": {
+    "@nestjs/bull": "^11.0.3",
+    "@nestjs/bullmq": "^11.0.3",
+    "@nestjs/cli": "^11.0.8",
+    "@nestjs/common": "^11.1.5",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.1.5",
+    "@nestjs/platform-express": "^11.1.5",
+    "@nestjs/typeorm": "^11.0.0",
+    "bull": "^4.16.5",
+    "bullmq": "^5.56.8",
+    "pg": "^8.16.3",
+    "redis": "^4.7.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "typeorm": "^0.3.25",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@types/redis": "^4.0.10",
+    "ts-node": "^10.9.2"
+  }
+}

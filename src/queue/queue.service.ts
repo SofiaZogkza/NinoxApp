@@ -1,18 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class QueueService {
-  constructor(@InjectQueue('tasks') private taskQueue: Queue) {}
+  constructor(
+    @InjectQueue('invoice') private invoiceQueue: Queue,
+    @InjectQueue('pdf') private pdfQueue: Queue,
+    @InjectQueue('email') private emailQueue: Queue,
+  ) {}
 
-  async enqueueTask(type: string, payload: Record<string, any>) {
-    await this.taskQueue.add(type, payload, {
+  async enqueueTask(queueName: 'invoice' | 'pdf' | 'email', data: any) {
+    const queue = this.getQueue(queueName);
+    return queue.add(queueName, data, {
       attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
+      backoff: { type: 'exponential', delay: 1000 },
     });
+  }
+
+  private getQueue(queueName: string): Queue {
+    switch (queueName) {
+      case 'invoice': return this.invoiceQueue;
+      case 'pdf': return this.pdfQueue;
+      case 'email': return this.emailQueue;
+      default: throw new Error(`Unknown queue: ${queueName}`);
+    }
   }
 }
